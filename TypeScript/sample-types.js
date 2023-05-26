@@ -6,3 +6,4 @@ console.log(found);
 console.log("My grade " + grade);
 console.log("Mi nombre " + firstName);
 console.log("Mi apellido " + lastName);
+console.log("Nombre  ".concat(firstName, " ").concat(lastName));
