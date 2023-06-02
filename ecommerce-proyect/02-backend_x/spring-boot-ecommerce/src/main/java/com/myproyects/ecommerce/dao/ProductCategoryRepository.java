@@ -8,6 +8,29 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 //"productCategory".- Name of JSON entry
 //"product-category" url path /product-category
 @CrossOrigin("http://localhost:4200")
-@RepositoryRestResource(collectionResourceRel="productCategory", path="product-category")
-public interface ProductCategoryRepository extends JpaRepository<ProductCategory,Long> {
+@RepositoryRestResource(collectionResourceRel = "productCategory", path = "product-category")
+public interface ProductCategoryRepository extends JpaRepository<ProductCategory, Long> {
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
