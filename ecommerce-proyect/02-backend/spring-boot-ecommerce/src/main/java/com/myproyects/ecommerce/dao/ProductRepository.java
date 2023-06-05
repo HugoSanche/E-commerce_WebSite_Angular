@@ -11,3 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 }
+
+
+
+

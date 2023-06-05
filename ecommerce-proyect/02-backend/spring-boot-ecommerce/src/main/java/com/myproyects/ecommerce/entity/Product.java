@@ -1,5 +1,6 @@
 package com.myproyects.ecommerce.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
