@@ -9,23 +9,29 @@ import { ProductCategory } from '../common/product-category';
   providedIn: 'root'
 })
 export class ProductService {
- 
- 
-  private productUrl='http://localhost:8080/api/products';
+  
+  private baseUrl='http://localhost:8080/api/products';
   private categoryUrl='http://localhost:8080/api/product-category';
   constructor(private httpClient: HttpClient) { }
+
+  getProduct(theProductId: number): Observable<Product> {
+    //need to build URL based on product id
+    const productUrl=`${this.baseUrl}/${theProductId}`;
+    return this.httpClient.get<Product>(productUrl);
+  }
+
 
   getProductList(theCategoryId:number): Observable<Product[]>{
 
     //need to build URL based on category id !
-    const searchUrl=`${this.productUrl}/search/findByCategoryId?id=${theCategoryId}`;
+    const searchUrl=`${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`;
 
     //se le asigna la variable que tiene la busqueda en este caso "searchUrl"
     return this.getProducts(searchUrl);
   }
   searchProducts(thekeyword: string) {
       //need to build URL based on category id !
-      const searchUrl=`${this.productUrl}/search/findByNameContaining?name=${thekeyword}`;
+      const searchUrl=`${this.baseUrl}/search/findByNameContaining?name=${thekeyword}`;
 
       //se le asigna la variable que tiene la busqueda en este caso "searchUrl"
       return this.getProducts(searchUrl);
