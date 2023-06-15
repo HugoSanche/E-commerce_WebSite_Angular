@@ -16,6 +16,14 @@
                 <a href="#" class="primary-btn">Add to cart</a>
               </div>
             </div>
+            <!-- if products empty then display a message
+
+              safe navigation operator (?)
+            products?  .- valida si el valor es null o indefinido o ==0 entonces despliega "No products found"
+            -->
+              <div *ngIf="products?.length == 0" class ="alert alert-warning col-md-12" role="alert">
+                No products found
+              </div>
         </div>
       </div>
     </div>
