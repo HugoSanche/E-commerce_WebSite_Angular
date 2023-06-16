@@ -20,10 +20,9 @@ export class ProductListComponent implements OnInit {
   searchMode: boolean = false;
 
   thePageNumber: number = 1;
-  thePageSize: number = 50;
+  thePageSize: number = 5;
   theTotalElements: number = 0;
-
-
+  previousKeyword:string="";
 
   constructor(private productService: ProductService,
     private route: ActivatedRoute) { }
@@ -43,8 +42,28 @@ export class ProductListComponent implements OnInit {
     }
 
   }
+
+
   handleSearchProducts() {
-    const thekeyword: string = this.route.snapshot.paramMap.get('keyword')!;
+    const thekeyword: string = this.route.snapshot.paramMap.get('keyword')?.trim()!;
+   
+    // if we have a different keyword than previous
+    // then set thePageNumber to 1
+    if (this.previousKeyword!=thekeyword){
+        this.thePageNumber=1;
+    }
+    this.previousKeyword=thekeyword;
+    console.log(`keyword=${thekeyword},thePageNumber=${this.thePageNumber}`);
+
+    //now search for the products using keyword
+    this.productService.searchProductPaginate(this.thePageNumber-1,
+                                              this.thePageSize,
+                                              thekeyword).subscribe(this.processResult());
+
+
+
+
+   
     //now search for the products using keyword
     this.productService.searchProducts(thekeyword).subscribe(
       data => {
@@ -52,6 +71,9 @@ export class ProductListComponent implements OnInit {
       }
     );
   }
+
+
+
   handleListProducts() {
     //check if "id" parameter is available
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
@@ -83,18 +105,32 @@ export class ProductListComponent implements OnInit {
 
     //now get the products for the given category id
     this.productService.getProductListPaginate(this.thePageNumber - 1,//spring begin pagination in 0
-      this.thePageSize,
-      this.currentCategoryId)
-      .subscribe(
-        data => {
-          this.products = data._embedded.products;
-          this.thePageNumber = data.page.number + 1; //Angular begins pagination in 1 
-          this.thePageSize = data.page.size;
-          this.theTotalElements = data.page.totalElements;
-        }
-      );
+                                              this.thePageSize,
+                                              this.currentCategoryId)
+                                              .subscribe(this.processResult());
+  }
+  updatePageSize(pageSize:string){
+      this.thePageSize=+pageSize;
+      this.thePageNumber=1;
+      this.listProducts();
+  }
 
-
-
+  processResult(){
+    return (data:any) =>{
+      this.products=data._embedded.products;
+      this.thePageNumber=data.page.number+1;
+      this.thePageSize=data.page.size;
+      this.theTotalElements=data.page.totalElements;
+    };
   }
 }
+
+
+
+
+
+
+
+
+
+
