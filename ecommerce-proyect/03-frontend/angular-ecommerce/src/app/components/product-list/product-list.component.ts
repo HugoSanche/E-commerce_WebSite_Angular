@@ -16,7 +16,14 @@ export class ProductListComponent implements OnInit {
   currentCategoryName: string = "";
   products: Product[] = [];
   currentCategoryId: number = 1;
+  previousCategoryId: number = 1; //used for pagination
   searchMode: boolean = false;
+
+  thePageNumber: number = 1;
+  thePageSize: number = 50;
+  theTotalElements: number = 0;
+
+
 
   constructor(private productService: ProductService,
     private route: ActivatedRoute) { }
@@ -28,20 +35,20 @@ export class ProductListComponent implements OnInit {
 
   listProducts() {
 
-    this.searchMode=this.route.snapshot.paramMap.has('keyword');
-    if(this.searchMode){
+    this.searchMode = this.route.snapshot.paramMap.has('keyword');
+    if (this.searchMode) {
       this.handleSearchProducts();
-    }else{
+    } else {
       this.handleListProducts();
     }
-    
+
   }
   handleSearchProducts() {
-    const thekeyword:string =this.route.snapshot.paramMap.get('keyword')!;
+    const thekeyword: string = this.route.snapshot.paramMap.get('keyword')!;
     //now search for the products using keyword
     this.productService.searchProducts(thekeyword).subscribe(
-      data=>{
-        this.products=data;
+      data => {
+        this.products = data;
       }
     );
   }
@@ -61,13 +68,33 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryId = 1;
       this.currentCategoryName = 'Books';
     }
+    //
+    //Check if we have a different category then previous
+    //Note:Angular will reuse a component if it is currently being viewed
+    //
+
+    // if we have a different categiry than previous
+    // then set thePageNumber back to 1
+    if (this.previousCategoryId != this.currentCategoryId) {
+      this.thePageNumber = 1;
+    }
+    this.previousCategoryId = this.currentCategoryId;
+    console.log(`currentCategoryId=${this.currentCategoryId},thePageNumber=${this.thePageNumber}`);
 
     //now get the products for the given category id
-    this.productService.getProductList(this.currentCategoryId).subscribe(
-      data => {
-        this.products = data;
-      }
-    )
+    this.productService.getProductListPaginate(this.thePageNumber - 1,//spring begin pagination in 0
+      this.thePageSize,
+      this.currentCategoryId)
+      .subscribe(
+        data => {
+          this.products = data._embedded.products;
+          this.thePageNumber = data.page.number + 1; //Angular begins pagination in 1 
+          this.thePageSize = data.page.size;
+          this.theTotalElements = data.page.totalElements;
+        }
+      );
+
+
+
   }
 }
-
