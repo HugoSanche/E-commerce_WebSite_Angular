@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class CartService {
+
   cartItems: CartItem[] = [];
   //Subject is a subclases of observable
   //we can use Subject tu publish events in out code
@@ -63,6 +64,35 @@ export class CartService {
     console.log('-----');
 
   }
-
+  decrementQuantity(theCartItem: CartItem) {
+      theCartItem.quantity--;
+      if (theCartItem.quantity===0){
+        this.remove(theCartItem);
+      }
+      else{
+        this.computerCartTotals();
+      }
+  }
+  remove(theCartItem: CartItem) {
+    // get index of items in the array
+    const itemIndex=this.cartItems.findIndex(tempCartItem=> tempCartItem.id ===theCartItem.id);
+    if (itemIndex>-1){
+      this,this.cartItems.splice(itemIndex,1);
+      this.computerCartTotals();
+    }
+  
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
