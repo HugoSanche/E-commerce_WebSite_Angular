@@ -90,14 +90,22 @@ export class CheckoutComponent implements OnInit{
     console.log("Handling the submit button");
     console.log(this.checkoutFormGroup.get('customer').value);
     console.log("The last Name of client "+this.checkoutFormGroup.get('customer').value.lastName);   
+  
+    console.log("The shipping Address country is "+this.checkoutFormGroup.get('shippingAddress').value.country.name);   
+    console.log("The shipping Address state is "+this.checkoutFormGroup.get('shippingAddress').value.state.name);
+  
   }
   copyShippingAddressToBillingAddress(event){
     if (event.target.checked){
       this.checkoutFormGroup.controls['billingAddress']
         .setValue(this.checkoutFormGroup.controls['shippingAddress'].value);
+
+        this.billingAddressStates=this.shippingAddressStates;
     }
     else {
       this.checkoutFormGroup.controls['billingAddress'].reset();
+      this.billingAddressStates=[];
+
     }
   }
   handleMonthsAndYears(){
@@ -122,7 +130,6 @@ export class CheckoutComponent implements OnInit{
     );
   }
   getStates(formGroupName: string) {
-    console.log("Holaaaa");
     const formGroup = this.checkoutFormGroup.get(formGroupName);
 
     const countryCode = formGroup.value.country.code;
