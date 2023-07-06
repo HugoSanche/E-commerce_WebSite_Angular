@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
+import { CartService } from 'src/app/services/cart.service';
 import { MyShopFormService } from 'src/app/services/my-shop-form.service';
 import { MyProyectValidators } from 'src/app/validators/my-proyect-validators';
 
@@ -25,9 +26,14 @@ export class CheckoutComponent implements OnInit{
   billingAddressStates:State[]=[];
 
   constructor(private formBuilder:FormBuilder,
-              private myShopFormService: MyShopFormService){}
+              private myShopFormService: MyShopFormService,
+              private cartService:CartService){}
   
   ngOnInit(): void {
+
+    //add total orders and total price
+    this.reviewCartDetails();
+
     this.checkoutFormGroup=this.formBuilder.group({
       customer:this.formBuilder.group({
         firstName:new FormControl('',
@@ -112,6 +118,7 @@ export class CheckoutComponent implements OnInit{
       );
 
   }
+
   onSubmitX(){
     console.log("Handling the submit button");
 
@@ -208,6 +215,17 @@ get creditCardSecurityCode(){return this.checkoutFormGroup.get('creditCard.secur
         // select first item by default
         formGroup.get('state').setValue(data[0]);
       }
+    );
+  }
+  reviewCartDetails() {
+    //subscribe to cartservice.totalquantity
+    this.cartService.totalQuantity.subscribe(
+      totalQuantity=>this.totalQuantity=totalQuantity
+    );
+
+    //subscribe to cartservice.totalprice
+    this.cartService.totalPrice.subscribe(
+      totalPrice=>this.totalPrice=totalPrice
     );
   }
 }
