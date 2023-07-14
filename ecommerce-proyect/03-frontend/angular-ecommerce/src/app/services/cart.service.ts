@@ -16,7 +16,23 @@ export class CartService {
   // Once subscribed, subcribers recieves the lates event sent prior to subscribing
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
-  constructor() { }
+  
+  //storage: Storage=sessionStorage;//session data its open only when web browser its open
+  storage: Storage=localStorage;//session data is persisted and survives browser restarts
+
+
+  constructor() { 
+    // read data from storage
+    let data=JSON.parse(this.storage.getItem('cartItems'));
+
+    if (data!=null){
+        this.cartItems=data;
+
+        // compute totals based on the data that is read from storage
+        this.computerCartTotals();
+    }
+
+  }
 
   addToCart(theCartItem: CartItem) {
     //check if we already have the item in our cart
@@ -56,7 +72,14 @@ export class CartService {
 
     //log cart data just for debugging purposes
     this.logCartData(totalPriceValue,totalQuantityValue);
+
+    //persist cart data
+    this.persistCartItems();
   }
+persistCartItems(){
+  this.storage.setItem('cartItems', JSON.stringify(this.cartItems));
+}
+
   logCartData(totalPriceValue: number, totalQuantityValue: number) {
     console.log('Contens of the cart');
     for(let tempCartItem of this.cartItems){
@@ -67,6 +90,9 @@ export class CartService {
     console.log('-----');
 
   }
+
+
+
   decrementQuantity(theCartItem: CartItem) {
       theCartItem.quantity--;
       if (theCartItem.quantity===0){

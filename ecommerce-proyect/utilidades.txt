@@ -2,4 +2,8 @@
 
  ng generate service services/cart
 
+ ng generate interface config/MyAppConfig
+
+ ng generate component components/login
+
 
