@@ -213,9 +213,9 @@ section{
 .section-content-p30{
     padding:0 30px
 }
-
+/*used for size search bar*/
 .au-input-xl{
-    min-width:935px
+    min-width:500px
 }
 
 input.au-input.au-input-xl{
