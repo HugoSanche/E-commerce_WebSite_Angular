@@ -13,8 +13,8 @@ import java.util.List;
 @Setter
 public class Country {
     @Id
-    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private int id;
 
     @Column(name="code")
@@ -26,5 +26,10 @@ public class Country {
     @JsonIgnore
     private List<State> states;
 
-
 }
+
+
+
+
+
+

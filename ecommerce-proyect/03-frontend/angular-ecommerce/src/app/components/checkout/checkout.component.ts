@@ -269,9 +269,9 @@ get creditCardSecurityCode(){return this.checkoutFormGroup.get('creditCard.secur
   getStates(formGroupName: string) {
     const formGroup = this.checkoutFormGroup.get(formGroupName);
 
-    const countryCode = formGroup.value.country.code;
-    const countryName = formGroup.value.country.name;
-
+    const countryCode = formGroup?.value.country.code;
+    const countryName = formGroup?.value.country.name;
+  
     console.log(`${formGroupName} country code: ${countryCode}`);
     console.log(`${formGroupName} country name: ${countryName}`);
 
@@ -286,7 +286,7 @@ get creditCardSecurityCode(){return this.checkoutFormGroup.get('creditCard.secur
         }
 
         // select first item by default
-        formGroup.get('state').setValue(data[0]);
+        formGroup.get('state')?.setValue(data[0]);
       }
     );
   }
