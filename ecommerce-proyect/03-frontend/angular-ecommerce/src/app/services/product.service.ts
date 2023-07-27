@@ -24,10 +24,13 @@ export class ProductService {
                           thePageSize:number,
                           theCategoryId:number
                           ): Observable<GetResponseProducts>{
-    console.log('Antes del error');
+  
     //need to build URL based on category id, page and size !
     const searchUrl=`${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`
                     +`&page=${thePage}&size=${thePageSize}`;
+    
+    //Show if run QA, Production or dev enviroment 
+    console.log(`Getting products from - ${searchUrl}`);
 
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
