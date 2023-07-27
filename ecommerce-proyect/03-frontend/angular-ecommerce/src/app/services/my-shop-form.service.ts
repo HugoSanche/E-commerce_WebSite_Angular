@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, map, of } from 'rxjs';
 import { Country } from '../common/country';
 import { State } from '../common/state';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MyShopFormService {
-  private countriesURL='http://localhost:8080/api/countries';
-  private statesURL='http://localhost:8080/api/states';
+  private countriesURL=environment.myproyectsApiUrl+'/countries';
+  private statesURL=environment.myproyectsApiUrl+'/states';
   //inyectando dependencias
   constructor(private httpClient:HttpClient) { }
   getCountries(): Observable<Country[]> {

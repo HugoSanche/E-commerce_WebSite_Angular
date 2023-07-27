@@ -4,14 +4,15 @@ import { Product } from '../common/product';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProductCategory } from '../common/product-category';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   
-  private baseUrl='http://localhost:8080/api/products';
-  private categoryUrl='http://localhost:8080/api/product-category';
+  private baseUrl=environment.myproyectsApiUrl+'/products';
+  private categoryUrl=environment.myproyectsApiUrl+'/product-category';
   constructor(private httpClient: HttpClient) { }
 
   getProduct(theProductId: number): Observable<Product> {
@@ -23,7 +24,7 @@ export class ProductService {
                           thePageSize:number,
                           theCategoryId:number
                           ): Observable<GetResponseProducts>{
-
+    console.log('Antes del error');
     //need to build URL based on category id, page and size !
     const searchUrl=`${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`
                     +`&page=${thePage}&size=${thePageSize}`;
