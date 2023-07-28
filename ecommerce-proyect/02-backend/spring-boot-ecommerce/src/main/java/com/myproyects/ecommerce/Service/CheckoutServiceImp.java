@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CheckoutServiceImp implements CheckoutService{
@@ -68,7 +67,13 @@ public class CheckoutServiceImp implements CheckoutService{
 
     @Override
     public PaymentIntent createPaymentIntent(PaymentInfo paymentInfo) throws StripeException {
-        return null;
+        List<String> paymetMethodTypes=new ArrayList<>();
+        Map<String,Object> params= new HashMap<>();
+        params.put("amount", paymentInfo.getAmount());
+        params.put("currency",paymentInfo.getCurrency());
+        params.put("payment_method_types",paymetMethodTypes);
+
+        return PaymentIntent.create(params);
     }
 
     private String generateOrderTrackingNumber() {
