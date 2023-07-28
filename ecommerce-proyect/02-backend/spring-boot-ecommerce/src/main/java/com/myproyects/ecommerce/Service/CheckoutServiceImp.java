@@ -1,11 +1,16 @@
 package com.myproyects.ecommerce.Service;
 
 import com.myproyects.ecommerce.dao.CustomerRepository;
+import com.myproyects.ecommerce.dto.PaymentInfo;
 import com.myproyects.ecommerce.dto.Purchase;
 import com.myproyects.ecommerce.dto.PurchaseResponse;
 import com.myproyects.ecommerce.entity.Customer;
 import com.myproyects.ecommerce.entity.Order;
 import com.myproyects.ecommerce.entity.OrderItem;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +21,12 @@ import java.util.UUID;
 public class CheckoutServiceImp implements CheckoutService{
 
     private CustomerRepository customerRepository;
-    public CheckoutServiceImp(CustomerRepository customerRepository){
+    public CheckoutServiceImp(CustomerRepository customerRepository,
+                              @Value("${stripe.key.secret}") String secretKey){
         this.customerRepository=customerRepository;
+
+        //initialize Stripe API with secret key
+        Stripe.apiKey=secretKey;
     }
     @Override
     @Transactional
@@ -55,6 +64,11 @@ public class CheckoutServiceImp implements CheckoutService{
         // save to the database
         customerRepository.save(customer);
         return new PurchaseResponse(orderTrackingNumber);
+    }
+
+    @Override
+    public PaymentIntent createPaymentIntent(PaymentInfo paymentInfo) throws StripeException {
+        return null;
     }
 
     private String generateOrderTrackingNumber() {
