@@ -17,12 +17,13 @@ export class AuthInterceptorService implements HttpInterceptor {
   }
   
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
+    console.log("Handling the submit button 20");
     //Only add an access token for secured endpoints
     const theEndPoint=environment.myproyectsApiUrl+'/orders';
     const securedEndpoints=[theEndPoint];
 
     if (securedEndpoints.some(url=>request.urlWithParams.includes(url))){
-      
+      console.log("Handling the submit button 21");
       // get access token
       const accessToken=this.oktaAuth.getAccessToken();
 
@@ -33,6 +34,7 @@ export class AuthInterceptorService implements HttpInterceptor {
         }
       })      
     }
+    console.log("Handling the submit button 23");
     return await lastValueFrom(next.handle(request));
   }
 }

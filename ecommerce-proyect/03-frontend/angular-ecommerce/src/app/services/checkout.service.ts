@@ -13,8 +13,6 @@ export class CheckoutService {
   private purchaseUrl=environment.myproyectsApiUrl+ '/checkout/purchase';
   
   private paymentIntentUrl=environment.myproyectsApiUrl+'/checkout/payment-intent';
-
-
   
   constructor(private httpClient:HttpClient) { }
 
@@ -22,7 +20,8 @@ export class CheckoutService {
     return this.httpClient.post<Purchase>(this.purchaseUrl, purchase);    
   }  
   createPaymentIntent(paymentInfo:PaymentInfo):Observable<any>{
-    return this.httpClient.post<PaymentInfo>(this.paymentIntentUrl,PaymentInfo);
+    console.log("Handling the submit button 7");
+    return this.httpClient.post<PaymentInfo>(this.paymentIntentUrl,paymentInfo);
   };
 }
 
