@@ -7,3 +7,17 @@
  ng generate component components/login
 
 
+3306 - MySQL
+
+4200 - Angular default port
+
+8443 - is the default port that Tomcat use to open SSL text service
+
+8080 - default tomcat port and
+
+9898 - just a user-defined port to differentiate for QA app launch.
+
+
+
+
+

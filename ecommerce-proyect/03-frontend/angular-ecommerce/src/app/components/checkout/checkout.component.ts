@@ -141,141 +141,131 @@ export class CheckoutComponent implements OnInit{
       );
 
   }
-
+//se cambio
   setupStripePaymentForm() {
-    console.log("Handling the submit button 6");
-    // get a handle to stripe elements
-    var elements = this.stripe.elements();
+       // get a handle to stripe elements
+       var elements = this.stripe.elements();
 
-    // Create a card element ... and hide the zip-code field
-    this.cardElement = elements.create('card', { hidePostalCode: true });
-
-    // Add an instance of card UI component into the 'card-element' div
-    this.cardElement.mount('#card-element');
-
-    // Add event binding for the 'change' event on the card element
-    this.cardElement.on('change', (event) => {
-
-      // get a handle to card-errors element
-      this.displayError = document.getElementById('card-errors');
-      console.log("Handling the submit button 30");
-      if (event.complete) {
-        console.log("Handling the submit button 31");
-        this.displayError.textContent = "";
-      } else if (event.error) {
-        console.log("Handling the submit button 32");
-        // show validation error to customer
-        this.displayError.textContent = event.error.message;
-      }
-
-    });
-    
+       // Create a card element ... and hide the zip-code field
+       this.cardElement = elements.create('card', { hidePostalCode: true });
+   
+       // Add an instance of card UI component into the 'card-element' div
+       this.cardElement.mount('#card-element');
+   
+       // Add event binding for the 'change' event on the card element
+       this.cardElement.on('change', (event:any) => {
+   
+         // get a handle to card-errors element
+         this.displayError = document.getElementById('card-errors');
+   
+         if (event.complete) {
+           this.displayError.textContent = "";
+         } else if (event.error) {
+           // show validation error to customer
+           this.displayError.textContent = event.error.message;
+         }
+   
+       });
   }
 
-  onSubmitX(){
-    console.log("Handling the submit button");
+  //se cambio
+  onSubmitX(){ console.log("Handling the submit button");
 
-    if (this.checkoutFormGroup.invalid) {
-      this.checkoutFormGroup.markAllAsTouched();
-      return;
-    }
+  if (this.checkoutFormGroup.invalid) {
+    this.checkoutFormGroup.markAllAsTouched();
+    return;
+  }
 
-    // set up order
-    let order = new Order();
-    order.totalPrice = this.totalPrice;
-    order.totalQuantity = this.totalQuantity;
+  // set up order
+  let order = new Order();
+  order.totalPrice = this.totalPrice;
+  order.totalQuantity = this.totalQuantity;
 
-    // get cart items
-    const cartItems = this.cartService.cartItems;
+  // get cart items
+  const cartItems = this.cartService.cartItems;
 
-    // create orderItems from cartItems
-    // - long way
-    /*
-    let orderItems: OrderItem[] = [];
-    for (let i=0; i < cartItems.length; i++) {
-      orderItems[i] = new OrderItem(cartItems[i]);
-    }
-    */
+  // create orderItems from cartItems
+  // - long way
+  /*
+  let orderItems: OrderItem[] = [];
+  for (let i=0; i < cartItems.length; i++) {
+    orderItems[i] = new OrderItem(cartItems[i]);
+  }
+  */
 
-    // - short way of doing the same thingy
-    let orderItems: OrderItem[] = cartItems.map(tempCartItem => new OrderItem(tempCartItem));
+  // - short way of doing the same thingy
+  let orderItems: OrderItem[] = cartItems.map(tempCartItem => new OrderItem(tempCartItem));
 
-    // set up purchase
-    let purchase = new Purchase();
-    
-    // populate purchase - customer
-    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
-    
-    // populate purchase - shipping address
-    purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
-    const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
-    const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
-    purchase.shippingAddress.state = shippingState.name;
-    purchase.shippingAddress.country = shippingCountry.name;
-
-    // populate purchase - billing address
-    purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
-    const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state));
-    const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
-    purchase.billingAddress.state = billingState.name;
-    purchase.billingAddress.country = billingCountry.name;
+  // set up purchase
+  let purchase = new Purchase();
   
-    // populate purchase - order and orderItems
-    purchase.order = order;
-    purchase.orderItems = orderItems;
+  // populate purchase - customer
+  purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+  
+  // populate purchase - shipping address
+  purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+  const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
+  const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
+  purchase.shippingAddress.state = shippingState.name;
+  purchase.shippingAddress.country = shippingCountry.name;
 
-    // compute payment info
-    this.paymentInfo.amount = this.totalPrice * 100;
-    this.paymentInfo.currency = "USD";
+  // populate purchase - billing address
+  purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
+  const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state));
+  const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
+  purchase.billingAddress.state = billingState.name;
+  purchase.billingAddress.country = billingCountry.name;
 
-    // if valid form then
-    // - create payment intent
-    // - confirm card payment
-    // - place order
+  // populate purchase - order and orderItems
+  purchase.order = order;
+  purchase.orderItems = orderItems;
 
-    if (!this.checkoutFormGroup.invalid && this.displayError.textContent === "") {
-      console.log("Handling the submit button 50");
-      this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe(
-        (paymentIntentResponse) => {
-          console.log("Handling the submit button 51");
-          this.stripe.confirmCardPayment(paymentIntentResponse.client_secret,
-            {
-              payment_method: {
-                card: this.cardElement
+  // compute payment info
+  this.paymentInfo.amount = this.totalPrice * 100;
+  this.paymentInfo.currency = "USD";
+
+  // if valid form then
+  // - create payment intent
+  // - confirm card payment
+  // - place order
+
+  if (!this.checkoutFormGroup.invalid && this.displayError.textContent === "") {
+
+    this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe(
+      (paymentIntentResponse) => {
+        this.stripe.confirmCardPayment(paymentIntentResponse.client_secret,
+          {
+            payment_method: {
+              card: this.cardElement
+            }
+          }, { handleActions: false })
+        .then((result: any) => {
+          if (result.error) {
+            // inform the customer there was an error
+            alert(`There was an error: ${result.error.message}`);
+          } else {
+            // call REST API via the CheckoutService
+            this.checkoutService.placeOrder(purchase).subscribe({
+              next: (response: any) => {
+                alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
+
+                // reset cart
+                this.resetCart();
+              },
+              error: (err: any) => {
+                alert(`There was an error: ${err.message}`);
               }
-            }, { handleActions: false })
-          .then(function(result) {
-            if (result.error) {
-              console.log("Handling the submit button 52");
-              // inform the customer there was an error
-
-              alert(`There was an error: ${result.error.message}`);
-            } else {
-              // call REST API via the CheckoutService
-              this.checkoutService.placeOrder(purchase).subscribe({
-                next: response => {
-                  alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
-
-                  // reset cart
-                  this.resetCart();
-                },
-                error: err => {
-                  alert(`There was an error: ${err.message}`);
-                }
-              })
-            }            
-          }.bind(this));
-        }
-      );
-    } else {
-      console.log("Handling the submit button 54");
-      this.checkoutFormGroup.markAllAsTouched();
-      return;
-    }
-    console.log("Handling the submit button 53");
+            })
+          }            
+        });
+      }
+    );
+  } else {
+    this.checkoutFormGroup.markAllAsTouched();
+    return;
   }
 
-
+  }
 resetCart(){
     // rest cart data
     this.cartService.cartItems=[];

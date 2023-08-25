@@ -1,0 +1,14 @@
+
+//compila typescritp file
+tsc customer.ts
+
+//no compita si tiene error
+tsc --noEmitOnError customer.ts
+
+tsc --target ES5 --noEmitOnError customer.ts
+
+Accessors are only available when targeting ECMAScript 5
+tsc --target ES5 --noEmitOnError customer.ts
+
+//create Json file with default configuration
+tsc --init

@@ -92,6 +92,7 @@ const routes:Routes=[
     ReactiveFormsModule,
     OktaAuthModule
   ],
+  //validado 273
   providers: [ProductService,{provide:OKTA_CONFIG, useValue:{oktaAuth}},
     //HTTP_INTERCEPTORS..- Token for HTTP interceptors
     //AuthInterceptorService .- Register our AuthInterceptorService as an HTPP interceptor
