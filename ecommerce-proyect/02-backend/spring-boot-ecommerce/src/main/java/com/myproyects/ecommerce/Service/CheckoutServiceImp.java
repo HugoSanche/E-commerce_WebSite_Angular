@@ -67,7 +67,6 @@ public class CheckoutServiceImp implements CheckoutService{
 
     @Override
     public PaymentIntent createPaymentIntent(PaymentInfo paymentInfo) throws StripeException {
-        //validado
         List<String> paymentMethodTypes=new ArrayList<>();
         paymentMethodTypes.add("card");
 
@@ -75,6 +74,7 @@ public class CheckoutServiceImp implements CheckoutService{
         params.put("amount", paymentInfo.getAmount());
         params.put("currency",paymentInfo.getCurrency());
         params.put("payment_method_types",paymentMethodTypes);
+        params.put("description","Myproyects purchase");
 
         return PaymentIntent.create(params);
     }

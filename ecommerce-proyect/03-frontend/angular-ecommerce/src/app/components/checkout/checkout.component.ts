@@ -221,9 +221,10 @@ export class CheckoutComponent implements OnInit{
   purchase.orderItems = orderItems;
 
   // compute payment info
-  this.paymentInfo.amount = this.totalPrice * 100;
+  this.paymentInfo.amount = Math.round( this.totalPrice * 100);
   this.paymentInfo.currency = "USD";
 
+  console.log(`this.paymentInfo.amount:${this.paymentInfo.amount}`);
   // if valid form then
   // - create payment intent
   // - confirm card payment
@@ -236,7 +237,18 @@ export class CheckoutComponent implements OnInit{
         this.stripe.confirmCardPayment(paymentIntentResponse.client_secret,
           {
             payment_method: {
-              card: this.cardElement
+              card: this.cardElement,
+              billing_details:{
+                email:purchase.customer.email,
+                name:`${purchase.customer.firstName} ${purchase.customer.lastName}`,
+                address:{
+                  line1:purchase.billingAddress.street,
+                  city:purchase.billingAddress.city,
+                  state:purchase.billingAddress.state,
+                  postal_code:purchase.billingAddress.zipCode,
+                  country:this.billingAddressCountry.value.code
+                }
+              }
             }
           }, { handleActions: false })
         .then((result: any) => {
@@ -271,6 +283,14 @@ resetCart(){
     this.cartService.cartItems=[];
     this.cartService.totalPrice.next(0);
     this.cartService.totalQuantity.next(0);
+    
+    /*when you reload the page not appear the item previously your purchase
+    cuando tu comprar un producto desaparece de la canasta pero al actaulizar 
+    el sito vuelve a aparecer el ultimo producto en la canasta aunque ya lo
+    hayas comprado.- con el siguiente codigo ya no aparece
+    */ 
+    this.cartService.persistCartItems();//
+
     // reset the form
     this.checkoutFormGroup.reset();
     
