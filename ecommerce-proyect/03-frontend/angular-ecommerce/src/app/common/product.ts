@@ -11,5 +11,6 @@ export class Product {
                 public dateCreated:Date,
                 public lastUpdated:Date,
                 ){}
+                
 
 }
